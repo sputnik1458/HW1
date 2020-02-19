@@ -1,6 +1,7 @@
 # HW1
 ## Part 1
 `g++ -o hw1-1 hw1-1.cpp`
+
 `./hw1-1 n a c g t k p outfile`
 
 * *n* (**int**): sequence length
