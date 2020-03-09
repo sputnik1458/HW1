@@ -9,3 +9,17 @@
 * *k* (**int**): number of sequences
 * *p* (**float** [0:1]): mutation probability
 * *outfile* (**string**): output file
+
+
+## Part 2
+
+`g++ .\hw1-2.cpp -o hw1-2`
+
+`.\hw1-2 inputfile min max outfile`
+
+
+Input:
+1. string: input file name
+2. integer: x = minimum fragment length
+3. integer: y = maximum fragment length (y ≥ x)
+4. string: output file name
