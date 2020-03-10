@@ -104,8 +104,8 @@ int main(int argc, char* argv[]) {
 
     for(int i = 0; i < newfasta.size(); i++) {
         outfile << newfasta[i];
-        if(newfasta[i+1] == '\n')
-            i++;
+      //  if(newfasta[i+1] == '\n')
+      //      i++;
     }
 
 
