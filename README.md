@@ -13,9 +13,9 @@
 
 ## Part 2
 
-`g++ .\hw1-2.cpp -o hw1-2`
+`g++ -o hw1-2 hw1-2.cpp`
 
-`.\hw1-2 inputfile min max outfile`
+`./hw1-2 inputfile min max outfile`
 
 
 Input:

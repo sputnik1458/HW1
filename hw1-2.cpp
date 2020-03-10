@@ -11,55 +11,45 @@ using namespace std;
 
 vector<char> splitsequence(int min, int max, vector<char> seq) {
 
-    int length = seq.size();
-    vector<char> newfasta;
-    int range;
-    std::vector<int>::iterator it;
-    int loc = 0;
-    bool ignore = false;
+  int length = seq.size();
+  vector<char> newfasta;
+  int range;
+  std::vector<int>::iterator it;
+  int loc = 0;
+  bool ignore = false;
 
 
-    for(int g = 0; g < seq.size(); g++) {
+  for(int g = 0; g < seq.size(); g++) {
 
-        if(seq[g] == '\n') {
-		// // cout << "LOCATION: " << loc << "   G =   "  << g << endl;
-           for(int i = loc; i < g; i++) {    
-                range = rand()%((max - min) + 1) + min;
-				// cout << "Range:  " << range << endl;
-				// cout << "Seq: ";
+    if(seq[g] == '\n') {
+      for(int i = loc; i < g; i++) {
+        range = rand()%((max - min) + 1) + min;
 
 				for(int rangepos = 0; rangepos < range; rangepos++) {
-               	
-                	if((g - i) <= range+1) {
-                    	i = g;
-						rangepos = max + 1;
-						//// cout << "IN HERE" << "   G :   " << g << "    I:  " << i << endl;
-						// cout << "FOUND" << endl;
-						ignore = true;
-              		}
+
+          if((g - i) <= range+1) {
+            i = g;
+  					rangepos = max + 1;
+          	ignore = true;
+          }
 					else {
-						newfasta.push_back(seq[i+rangepos]);
-						// cout << seq[i+rangepos];
+            newfasta.push_back(seq[i+rangepos]);
 					}
 				}
-				if(!ignore) {
-					i = i+range-1;
-					// cout << "INN" << endl;
-			//	newfasta.push_back('\n');
 
+				if(!ignore) {
+          i = i+range-1;
 				}
 
-				ignore = false;	
-				// cout << endl << endl;
+				ignore = false;
 				newfasta.push_back('\n');
-            }
-
+      }
+      newfasta.pop_back();
 			loc = g+1;
 
-        }
     }
-
-    return newfasta;
+  }
+  return newfasta;
 
 }
 
@@ -76,7 +66,7 @@ int main(int argc, char* argv[]) {
 
     min = stoi(argv[2]);
     max = stoi(argv[3]);
-    
+
 
     string filename = argv[1];
 
