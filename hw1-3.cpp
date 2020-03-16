@@ -14,8 +14,56 @@
 #include <algorithm>
 #include <initializer_list>
 
+struct table_element {
+  int score;
+  int source;
+};
+
+void print_table(std::vector<std::vector<table_element>> table) {
+  int n = table.size();
+  int m = table[0].size();
+
+  for (int i = 0; i < n; i++) {
+    for (int j = 0; j < m; j++) {
+      std::cout << table[i][j].score << ' ';
+    }
+    std::cout << '\n';
+  }
+  std::cout << '\n';
+}
+
+int calc_score(std::vector<std::vector<table_element>> table) {
+
+  int n = table.size();
+  int m = table[0].size();
+  int score = 0;
+
+  int max_i = 0;
+  int loc_i = 0;
+  for (int i = 1; i < n; i++) {
+    if (table[i][m-1].score > max_i) {
+      max_i = table[i][m-1].score;
+      loc_i = i;
+    }
+  }
+
+  int max_j = 0;
+  int loc_j = 0;
+  for (int j = 1; j < m; j++) {
+    if (table[n-1][j].score > max_j) {
+      max_j = table[n-1][j].score;
+      loc_j = j;
+    }
+  }
+
+  score = std::max(max_i, max_j);
+  //std::cout << score;
+
+  return score;
+}
+
 // returns dovetail alignment score
-int align(std::string seq1, std::string seq2, int s, int r, int d) {
+std::vector<std::vector<table_element>> align(std::string seq1, std::string seq2, int s, int r, int d) {
 
   int score = 0;
   int n = seq2.size()+1;
@@ -70,47 +118,60 @@ int align(std::string seq1, std::string seq2, int s, int r, int d) {
     }
   }
 
+  std::vector<std::vector<table_element>> table1(n, std::vector<table_element>(m));
+
+  for (int i = 0; i < n; i++) {
+    for (int j = 0; j < m; j++) {
+      table1[i][j].score = table[i][j][1];
+      table1[i][j].source = table[i][j][2];
+    }
+  }
+
+  // std::cout << calc_score(table1);
+
+  // int max_i = 0;
+  // int loc_i = 0;
+  // for (int i = 1; i < n; i++) {
+  //   if (table1[i][m-1].score > max_i) {
+  //     max_i = table1[i][m-1].score;
+  //     loc_i = i;
+  //   }
+  // }
+  //
+  // int max_j = 0;
+  // int loc_j = 0;
+  // for (int j = 1; j < m; j++) {
+  //   if (table1[n-1][j].score > max_j) {
+  //     max_j = table1[n-1][j].score;
+  //     loc_j = j;
+  //   }
+  // }
+  //
+  // score = std::max(max_i, max_j);
+  //
+  // if (score > 0) {
+  //   int loc[2];
+  //   if (score == max_i) {
+  //     loc[0] = loc_i;
+  //     loc[1] = m-1;
+  //   } else {
+  //     loc[0] = n-1;
+  //     loc[1] = loc_j;
+  //   }
+
+    // TODO: recursively backtrace
+    //std::cout << table1[loc[0]][loc[1]].source << '\n';
+
+  // }
   // for (int i = 0; i < n; i++) {
   //   for (int j = 0; j < m; j++) {
-  //     std::cout << table[i][j] << " ";
+  //     std::cout << table1[i][j].score << ' ';
   //   }
   //   std::cout << '\n';
   // }
   // std::cout << '\n';
 
-  int max_i = 0;
-  int loc_i;
-  for (int i = 1; i < n; i++) {
-    if (table[i][m-1][1] > max_i) {
-      max_i = table[i][m-1][1];
-      loc_i = i;
-    }
-  }
-
-  int max_j = 0;
-  int loc_j;
-  for (int j = 1; j < m; j++) {
-    if (table[n-1][j][1] > max_j) {
-      max_j = table[n-1][j][1];
-      loc_j = j;
-    }
-  }
-
-  score = std::max(max_i, max_j);
-
-  int loc[2];
-  if (score == max_i) {
-    loc[0] = loc_i;
-    loc[1] = m-1;
-  } else {
-    loc[0] = n-1;
-    loc[1] = loc_j;
-  }
-
-  // TODO: recursively backtrace
-  std::cout << table[loc[0]][loc[1]][2];
-
-  return score;
+  return table1;
 }
 
 int main(int argc, char* argv[]) {
@@ -130,20 +191,31 @@ int main(int argc, char* argv[]) {
     frags.push_back(str);
   }
 
-  align(frags[0], frags[1], s, r, d);
 
   // compute alignment scores
-  // std::vector<int> align_scores;
-  // for (int i = 0; i < frags.size()-1; i++) {
-  //   align_scores.push_back(align(frags[i], frags[i+1], s, r, d));
-  // }
+  std::vector<std::pair<std::vector<std::vector<table_element>>, int>> align_tables;
+  std::pair<std::vector<std::vector<table_element>>, int> alignment;
+  std::vector<std::vector<table_element>> table;
+  int score;
+  for (int i = 0; i < frags.size()-1; i++) {
+    table = align(frags[i], frags[i+1], s, r, d);
+    score = calc_score(table);
+    align_tables.push_back(std::make_pair(table, score));
+  }
 
   // find best alignment
-  // std::vector<int>::iterator i_max = std::max_element(align_scores.begin(), align_scores.end());
-  // int index = std::distance(align_scores.begin(), i_max);
-  // std::cout << frags[index] << '\n' << frags[index+1];
-  //
-  // std::vector<char> merge;
+  int i_max = 0;
+  int best_score = 0;
+  for (int k = 0; k < align_tables.size(); k++) {
+    if (align_tables[k].second > best_score) {
+      i_max = k;
+      best_score = align_tables[k].second;
+    }
+  }
+  std::cout << frags[i_max] << '\n' << frags[i_max+1];
+  std::cout << best_score;
+  print_table(align_tables[i_max].first);
+
 
   return 0;
 }
