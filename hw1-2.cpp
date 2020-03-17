@@ -109,7 +109,7 @@ int main(int argc, char* argv[]) {
     n++;
     for(int i = 0; i < newfasta.size(); i++) {
         outfile << newfasta[i];
-        if (newfasta[i] == '\n') {
+        if ((newfasta[i] == '\n') && (i != newfasta.size()-1)) {
           outfile << ">FRAGMENT #" << n << '\n';
           n++;
         }
