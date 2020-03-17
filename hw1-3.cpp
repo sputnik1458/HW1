@@ -137,23 +137,25 @@ std::vector<std::vector<table_element>> align(std::string seq1, std::string seq2
   int score = 0;
   int n = seq2.size()+1;
   int m = seq1.size()+1;
-  int table[n][m][2];
+  //int table[n][m][2];
+  std::vector<std::vector<table_element>> table(n, std::vector<table_element>(m));
+
 
   // initialize rows
   for (int j = 0; j < m; j++) {
-    table[0][j][1] = 0;
+    table[0][j].score = 0;
   }
 
   // initialize cols
   for (int i = 0; i < n; i++) {
-    table[i][0][1] = 0;
+    table[i][0].score = 0;
   }
 
   int score_d = 0;
   int score_v = 0;
   int score_h = 0;
 
-  for (int i = 1; i <= n; i++) {
+  for (int i = 1; i < n; i++) {
     for (int j = 1; j < m; j++) {
       score_d = 0; // score moving diagonally
       score_v = 0; // moving vertically
@@ -161,42 +163,42 @@ std::vector<std::vector<table_element>> align(std::string seq1, std::string seq2
 
       // calculate diagonal score
       if (seq2[i-1] == seq1[j-1]) {
-        score_d = table[i-1][j-1][1] + s;
+        score_d = table[i-1][j-1].score + s;
       } else {
-        score_d = table[i-1][j-1][1] + r;
+        score_d = table[i-1][j-1].score + r;
       }
 
       // calculate vertical score
-      score_v = table[i-1][j][1] + d;
+      score_v = table[i-1][j].score + d;
 
       // calculate horizontal score
-      score_h = table[i][j-1][1] + d;
+      score_h = table[i][j-1].score + d;
 
       // assign max score to table
       int max_score = std::max({score_d, score_v, score_h});
-      table[i][j][1] = max_score;
+      table[i][j].score = max_score;
 
       // assign source to table
       if (max_score == score_d) {
-        table[i][j][2] = 1; // diagonal source
+        table[i][j].source = 1; // diagonal source
       } else if (max_score == score_v) {
-          table[i][j][2] = 2; // vertical source
+          table[i][j].source = 2; // vertical source
       } else {
-          table[i][j][2] = 0; // horizontal source
+          table[i][j].source = 0; // horizontal source
       }
     }
   }
 
-  std::vector<std::vector<table_element>> table1(n, std::vector<table_element>(m));
+  // std::vector<std::vector<table_element>> table1(n, std::vector<table_element>(m));
+  //
+  // for (int i = 0; i < n; i++) {
+  //   for (int j = 0; j < m; j++) {
+  //     table1[i][j].score = table[i][j][1];
+  //     table1[i][j].source = table[i][j][2];
+  //   }
+  // }
 
-  for (int i = 0; i < n; i++) {
-    for (int j = 0; j < m; j++) {
-      table1[i][j].score = table[i][j][1];
-      table1[i][j].source = table[i][j][2];
-    }
-  }
-
-  return table1;
+  return table;
 }
 
 int main(int argc, char* argv[]) {
@@ -210,6 +212,8 @@ int main(int argc, char* argv[]) {
   std::ifstream infile(input_file);
   std::string str;
 
+  std::ofstream outfile(output_file);
+
   // read file into vector
   std::vector<std::string> frags;
   while (std::getline(infile, str)) {
@@ -218,7 +222,7 @@ int main(int argc, char* argv[]) {
 
   int i_max, best_score;
 
-  while (frags.size() > 0) {
+  while (frags.size() > 1) {
     i_max = 0;
     best_score = 0;
 
@@ -239,27 +243,27 @@ int main(int argc, char* argv[]) {
       }
     }
 
+
     if (best_score < 0) {
       break;
     }
 
-    // for (int x = 0; x < align_tables.size(); x++) {
-    //std::cout << frags[i_max] << ' ' << frags[i_max+1] << '\n';
-    //   std::cout << align_tables[x].score << '\n';
-    //   align_tables[x].print_table();
-    //   std::cout << merge(frags[x], frags[x+1], align_tables[x]) << "\n\n";
-    // }
-
+    // merge and replace
     std::string merged_seq = merge(frags[i_max], frags[i_max+1], align_tables[i_max]);
     frags[i_max] = merged_seq;
-    std::cout << merged_seq << '\n';
+    //std::cout << merged_seq << '\n';
     frags.erase(frags.begin() + i_max + 1);
+
   }
 
-  // for (int x = 0; x < frags.size(); x++) {
-  //   std::cout << frags[x] << '\n';
-  // }
+  std::string largest_align = "";
+  for (int w = 0; w < frags.size(); w++) {
+    if (frags[w].size() > largest_align.size()) {
+      largest_align = frags[w];
+    }
+  }
 
+  outfile << largest_align << '\n';
 
   return 0;
 }
