@@ -101,7 +101,6 @@ std::string merge(std::string seq1, std::string seq2, Alignment a) {
   // calculate length of alignment overlap
   e = a.table[loc.first][loc.second];
   do {
-    //align_seg.push_back(seq2[loc.first-1]);
     align_size++;
     switch (e.source) {
       case 0:
@@ -189,15 +188,6 @@ std::vector<std::vector<table_element>> align(std::string seq1, std::string seq2
     }
   }
 
-  // std::vector<std::vector<table_element>> table1(n, std::vector<table_element>(m));
-  //
-  // for (int i = 0; i < n; i++) {
-  //   for (int j = 0; j < m; j++) {
-  //     table1[i][j].score = table[i][j][1];
-  //     table1[i][j].source = table[i][j][2];
-  //   }
-  // }
-
   return table;
 }
 
@@ -217,7 +207,10 @@ int main(int argc, char* argv[]) {
   // read file into vector
   std::vector<std::string> frags;
   while (std::getline(infile, str)) {
-    frags.push_back(str);
+    if (str[0] != '>') {
+      frags.push_back(str);
+      std::cout << str << '\n';
+    }
   }
 
   int i_max, best_score;
@@ -264,6 +257,8 @@ int main(int argc, char* argv[]) {
   }
 
   outfile << largest_align << '\n';
+  outfile.close();
+  infile.close();
 
   return 0;
 }

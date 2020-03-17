@@ -25,7 +25,6 @@ char genNucleotide(int a, int c, int g, int s) {
   } else {
       return 'T';
   }
-
 }
 
 int main(int argc, char* argv[]) {
@@ -49,6 +48,7 @@ int main(int argc, char* argv[]) {
   char f[n];
 
   // generates first sequence
+  outfile << ">SEQUENCE #1\n";
   for (int i = 0; i < n; i++) {
     nt = genNucleotide(a, c, g, s);
     f[i] = nt;
@@ -58,6 +58,7 @@ int main(int argc, char* argv[]) {
 
   // generates k-1 sequences with mutation probability
   for (int j = 0; j < k-1; j++) {
+    outfile << ">SEQUENCE #" << j+2 << '\n';
     for (int i = 0; i < n; i++) {
       bool mut = std::rand() % 1000 + 1 < p*1000;
       if (mut) {
