@@ -79,9 +79,15 @@ int main(int argc, char* argv[]) {
     ifstream file;
     file.open(filename, ios::in);
 
-    while(!file.eof()) {
-        file.get(character);
-        seq.push_back(character);
+    std::string str;
+
+    while (std::getline(file, str)) {
+      if (str[0] != '>') {
+        for (int i = 0; i < str.size(); i++) {
+          seq.push_back(str[i]);
+        }
+        seq.push_back('\n');
+      }
     }
 
     int seqlength = 0;
@@ -98,8 +104,15 @@ int main(int argc, char* argv[]) {
 
     outfile.open(argv[4]);
 
+    int n = 1;
+    outfile << ">FRAGMENT #" << n << '\n';
+    n++;
     for(int i = 0; i < newfasta.size(); i++) {
         outfile << newfasta[i];
+        if (newfasta[i] == '\n') {
+          outfile << ">FRAGMENT #" << n << '\n';
+          n++;
+        }
       //  if(newfasta[i+1] == '\n')
       //      i++;
     }

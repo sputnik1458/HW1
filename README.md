@@ -1,7 +1,7 @@
-# HW1
-## Part 1
-`g++ -o hw1-1 hw1-1.cpp`
 
+# HW1
+Run `make all` to compile
+## Part 1
 `./hw1-1 n a c g t k p outfile`
 
 * *n* (**int**): sequence length
@@ -12,14 +12,18 @@
 
 
 ## Part 2
+`./hw1-2 infile min max outfile`
 
-`g++ -o hw1-2 hw1-2.cpp`
+* *infile* (**string**): input file
+* *x* (**int**): minimum fragment length
+* *y* (**int**): minimum fragment length (y ≥ x)
+* *outfile* (**string**): output file
 
-`./hw1-2 inputfile min max outfile`
+## Part 3
+`./hw1-3 infile s r d outfile`
 
-
-Input:
-1. string: input file name
-2. integer: x = minimum fragment length
-3. integer: y = maximum fragment length (y ≥ x)
-4. string: output file name
+* *infile* (**string**): input file
+* *s* (**int**): match score (>0)
+* *r* (**int**): replace penalty (<0)
+* *d* (**int**): insert/delete penalty (<0)
+* *outfile* (**string**): output file
