@@ -209,7 +209,6 @@ int main(int argc, char* argv[]) {
   while (std::getline(infile, str)) {
     if (str[0] != '>') {
       frags.push_back(str);
-      std::cout << str << '\n';
     }
   }
 
@@ -244,7 +243,6 @@ int main(int argc, char* argv[]) {
     // merge and replace
     std::string merged_seq = merge(frags[i_max], frags[i_max+1], align_tables[i_max]);
     frags[i_max] = merged_seq;
-    //std::cout << merged_seq << '\n';
     frags.erase(frags.begin() + i_max + 1);
 
   }
