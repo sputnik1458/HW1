@@ -11,8 +11,9 @@
 #include <cstring>
 #include <fstream>
 
-// returns a random nucleotide based on given probabilities
+// returns a deletion or random nucleotide based on given probabilities
 char genNucleotide(int a, int c, int g, int s) {
+
   int r = std::rand() % s + 1;
 
   if (r < a) {
@@ -24,6 +25,7 @@ char genNucleotide(int a, int c, int g, int s) {
   } else {
       return 'T';
   }
+
 }
 
 int main(int argc, char* argv[]) {
@@ -59,7 +61,13 @@ int main(int argc, char* argv[]) {
     for (int i = 0; i < n; i++) {
       bool mut = std::rand() % 1000 + 1 < p*1000;
       if (mut) {
-        outfile << genNucleotide(a, c, g, s);
+        // 50% chance of deletion
+        int d = std::rand() % 3;
+        if (d) {
+          outfile << genNucleotide(a, c, g, s);
+        } else {
+          outfile << '-';
+        }
       } else {
         outfile << f[i];
       }

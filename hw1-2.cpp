@@ -1,3 +1,9 @@
+/* CIS4930 - Data Science in Bioinformatics Spring 2020
+  University of Florida
+  HW1
+  Jacob Frank & Pedro Sicilia
+*/
+
 #include <iostream>
 #include <fstream>
 #include <string>
